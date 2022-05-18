@@ -54,6 +54,24 @@ class TestComplexStreamLoadJob(unittestcore.BaseUnitTest):
 
         self.assertEqual(ret, 2, msg="Exit code is not 2!")  # expected exit code is 2 - serious problem
 
+    def test_postgres_stream(self):
+        from target_bigquery import main
+
+        self.set_cli_args(
+            stdin=os.path.join(os.path.join(
+                os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'tests'), 'rsc'),
+                'data'), 'postgres_stream_potential_error.json'),
+            config=os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'sandbox'),
+                                'target-config.json'),
+            processhandler="load-job"
+        )
+
+        ret = main()
+        state = self.get_state()[-1]
+        print(state)
+
+        self.assertEqual(ret, 0, msg="Exit code is not 0!")
+
     def test_recharge_stream(self):
         from target_bigquery import main
 
@@ -376,7 +394,6 @@ class TestComplexStreamLoadJob(unittestcore.BaseUnitTest):
 
         self.assertEqual(ret, 0, msg="Exit code is not 0!")
 
-
     def test_schema_error(self):
 
         from target_bigquery import main
@@ -451,4 +468,3 @@ class TestComplexStreamLoadJob(unittestcore.BaseUnitTest):
                  "Cannot format a record for stream simple_stream to its corresponding BigQuery schema. Details: {'record': {'id': '12933951', 'name': 'Milestone and Project Plan', 'orderindex': 17, 'override_statuses': 'false', 'hidden': 'false', 'space': {'id': '2577684', 'name': 'meshDelivery'}, 'task_count': '10', 'archived': 'true', 'statuses': [], 'lists': [{'id': '25670974', 'name': 'POC <customer/department>', 'orderindex': 0, 'status': 'null', 'priority': 'null', 'assignee': 'null', 'task_count': 10, 'due_date': 'null', 'start_date': 'null', 'space': {'id': '2577684', 'name': 'meshDelivery', 'access': 'true'}, 'archived': 'false', 'override_statuses': 'null', 'statuses': [{'id': 'p2577684_eDZ87cTk', 'status': 'Open', 'orderindex': 0, 'color': '#d3d3d3', 'type': 'open'}, {'id': 'p2577684_Sf8kB74x', 'status': 'planned', 'orderindex': 1, 'color': '#82CB11', 'type': 'custom'}, {'id': 'p2577684_yG5b2doG', 'status': 'in progress', 'orderindex': 2, 'color': '#4194f6', 'type': 'custom'}, {'id': 'p2577684_BZKpph7f', 'status': 'review', 'orderindex': 3, 'color': '#A875FF', 'type': 'custom'}, {'id': 'p2577684_ouoISXPV', 'status': 'Closed', 'orderindex': 4, 'color': '#6bc950', 'type': 'closed'}], 'permission_level': 'create'}], 'permission_level': 'create'}, 'schema': {'properties': {'id': {'type': ['string']}, 'name': {'type': ['null', 'string']}, 'orderindex': {'type': ['null', 'integer']}, 'override_statuses': {'type': ['null', 'boolean']}, 'hidden': {'type': ['null', 'boolean']}, 'space': {'properties': {'id': {'type': ['null', 'string']}, 'name': {'type': ['null', 'string']}}, 'type': 'object'}, 'task_count': {'type': ['null', 'string', 'integer']}, 'statuses': {'items': {}, 'type': ['array', 'null']}, 'lists': {'items': {}, 'type': ['array', 'null']}, 'archived': {'type': ['null', 'boolean']}, 'permission_level': {'type': ['null', 'string']}}, 'type': 'object'}, 'bq_schema': {'id': {'type': 'STRING', 'mode': 'REQUIRED', 'policyTags': {'names': []}}, 'name': {'type': 'STRING', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, 'orderindex': {'type': 'INTEGER', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, 'override_statuses': {'type': 'BOOLEAN', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, 'hidden': {'type': 'BOOLEAN', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, 'space': {'type': 'RECORD', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'fields': {'id': {'type': 'STRING', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, 'name': {'type': 'STRING', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}}}, 'task_count': {'type': 'STRING', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, 'statuses': {'type': 'RECORD', 'mode': 'REPEATED', 'precision': None, 'scale': None, 'fields': []}, 'lists': {'type': 'RECORD', 'mode': 'REPEATED', 'precision': None, 'scale': None, 'fields': []}, 'archived': {'type': 'BOOLEAN', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, 'permission_level': {'type': 'STRING', 'mode': 'NULLABLE', 'precision': None, 'scale': None, 'policyTags': {'names': []}}, '_time_extracted': {'type': 'timestamp', 'mode': 'NULLABLE', 'policyTags': {'names': []}}, '_time_loaded': {'type': 'timestamp', 'mode': 'NULLABLE', 'policyTags': {'names': []}}}}"),
                 ('root', 'INFO', "unit test ends")
             )
-
